@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "groceries-28ebe": {
+      "hosting": {
+        "groceries": [
+          "groceries-28ebe"
+        ]
+      }
+    }
+  }
+}
