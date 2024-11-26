@@ -1,13 +1,41 @@
-import 'hammerjs';
-import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { Routes, provideRouter } from '@angular/router';
+import { AppComponent } from './app/app.component';
+import { provideHttpClient } from '@angular/common/http';
+import { AuthGuard } from './app/guards/auth.guard';
+import { withFetch } from '@angular/common/http';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
-import { AppModule } from './app/app.module';
-import { environment } from './environments/environment';
+const routes: Routes = [
+  {
+    path: '',
+    loadComponent: () => 
+      import('./app/shop/shop.component').then(m => m.ShopComponent),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'admin',
+    loadComponent: () => 
+      import('./app/admin/admin.component').then(m => m.AdminComponent),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'settings',
+    loadComponent: () => 
+      import('./app/components/settings/settings.component').then(m => m.SettingsComponent),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'login',
+    loadComponent: () => 
+      import('./app/components/login/login.component').then(m => m.LoginComponent)
+  }
+];
 
-if (environment.production) {
-  enableProdMode();
-}
-
-platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.error(err));
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideRouter(routes),
+    provideHttpClient(withFetch()),
+    provideAnimations()
+  ]
+}).catch(err => console.error(err));
